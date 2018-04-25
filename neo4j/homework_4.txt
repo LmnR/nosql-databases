@@ -1,7 +1,69 @@
-// The scenario you have used for your schema is:
+// The scenario you have used for your schema is: Family
+
+CREATE (n1:Human {name: 'Jin'});
+CREATE (n2:Human {name: 'Kai'});
+CREATE (n3:Human {name: 'Hong'});
+CREATE (n4:Human {name: 'Huang'});
+CREATE (n5:Human {name: 'Zhao'});
+CREATE (n6:Cat {name: 'Jerry'});
+CREATE (n7:Cat {name: 'Tom'});
+CREATE (n8:Dog {name: 'Kodak'});
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Jin' AND b.name = 'Kai'
+CREATE (a)-[r:SON_OF {since: '1996'}]->(b);
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Kai' AND b.name = 'Jin'
+CREATE (a)-[r:MOTHER_OF {since: '1996'}]->(b);
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Jin' AND b.name = 'Hong'
+CREATE (a)-[r:SON_OF {since: '1996'}]->(b);
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Hong' AND b.name = 'Jin'
+CREATE (a)-[r:FATHER_OF {since: '1996'}]->(b);
+
+MATCH (a:Human),(b:Cat)
+WHERE a.name = 'Jin' AND b.name = 'Tom'
+CREATE (a)-[r:OWNER_OF {since: '1996'}]->(b);
+
+MATCH (a:Human),(b:Cat)
+WHERE a.name = 'Jin' AND b.name = 'Jerry'
+CREATE (a)-[r:OWNER_OF]->(b);
+
+MATCH (a:Human),(b:Dog)
+WHERE a.name = 'Jin' AND b.name = 'Kodak'
+CREATE (a)-[r:OWNER_OF]->(b);
+
+MATCH (a:Human),(b:Cat)
+WHERE a.name = 'Jin' AND b.name = 'Tom'
+CREATE (b)-[r:PET_OF]->(a);
+
+MATCH (a:Human),(b:Cat)
+WHERE a.name = 'Jin' AND b.name = 'Jerry'
+CREATE (b)-[r:PET_OF]->(a);
+
+MATCH (a:Human),(b:Dog)
+WHERE a.name = 'Jin' AND b.name = 'Kodak'
+CREATE (b)-[r:PET_OF]->(a);
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Huang' AND b.name = 'Kai'
+CREATE (a)-[r:FATHER_OF]->(b);
+
+MATCH (a:Human),(b:Human)
+WHERE a.name = 'Zhao' AND b.name = 'Kai'
+CREATE (a)-[r:MOTHER_OF]->(b);
+
+MATCH (a)-[r]->(b)
+WHERE a.name = 'Jin'
+RETURN a.name, b.name, type(r);
+
+MATCH (a)-[r:OWNER_OF]->(b)
+WHERE a.name = 'Jin'
+RETURN a.name, b.name, type(r);
 
 
-// This is an example. Your own commands should *not* be commented out so we can pipe the file into the cypher-shell.
-// If you'd like to test your commands, you can run 'cat homework_4.txt | cypher-shell -u neo4j -p test' from
-// the vagrant box command line. Make sure neo4j is running first.
-// CREATE (a:person { name: 't' });
+
